@@ -19,7 +19,7 @@ const saltRounds = 10;
 // POST /auth/signup  - Creates a new user in the database
 router.post("/signup", (req, res, next) => {
   const { email, password, name } = req.body;
-
+ console.log(req.body)
   // Check if email or password or name are provided as empty strings
   if (email === "" || password === "" || name === "") {
     res.status(400).json({ message: "Provide email, password and name" });
@@ -33,15 +33,15 @@ router.post("/signup", (req, res, next) => {
     return;
   }
 
-  // This regular expression checks password for special characters and minimum length
-  const passwordRegex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
-  if (!passwordRegex.test(password)) {
-    res.status(400).json({
-      message:
-        "Password must have at least 6 characters and contain at least one number, one lowercase and one uppercase letter.",
-    });
-    return;
-  }
+  // // This regular expression checks password for special characters and minimum length
+  // const passwordRegex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
+  // if (!passwordRegex.test(password)) {
+  //   res.status(400).json({
+  //     message:
+  //       "Password must have at least 6 characters and contain at least one number, one lowercase and one uppercase letter.",
+  //   });
+  //   return;
+  // }
 
   User.findOne({ email })
   .then((foundUser) => {
@@ -49,10 +49,10 @@ router.post("/signup", (req, res, next) => {
       res.status(400).json({ message: "User already exists." });
       return;
     }
-
+  
     const salt = bcrypt.genSaltSync(saltRounds);
     const hashedPassword = bcrypt.hashSync(password, salt);
-
+  
     return User.create({ email, password: hashedPassword, name });
   })
   .then((createdUser) => {
