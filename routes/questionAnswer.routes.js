@@ -23,7 +23,7 @@ router.post("/create", async (req, res) => {
 });
 
 // GET /question-answers/all - Retrieve all question answers
-router.get("/all", async (req, res) => {
+router.get("/allQuestionAnswer", async (req, res) => {
   try {
     const questionAnswers = await QuestionAnswer.find();
     res.json(questionAnswers);
