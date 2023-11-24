@@ -36,31 +36,16 @@ io.on("connection", (socket) => {
 
 
   socket.on("endGame", (room) => {
+    const roomUsers = game.find((r) => r.room === room.roomName).users;
+    
+      io.to(room.roomName).emit("result", roomUsers);
+//  const roomData = game.find((r) => r.room === room.roomData);
+  const roomIndex = game.findIndex((r) => r.room === room.roomName);
+        if (roomIndex !== -1) {
+          game.splice(roomIndex, 1);
+        }
 
-    const roomData = game.find((r) => r.room === room.roomData).users;
-
-      io.to(room.roomData).emit("result", roomData);
-   
   });
-
-
-// socket.on("endGame", (data) => {
-//   // Assuming gameResults is an array containing scores or other relevant data
-//   const gameResults = getGameResults(data.roomData);
-//   io.to(data.roomData).emit("result", gameResults);
-// });
-
-// // Additional function to calculate game results
-// function getGameResults(roomData) {
-//   // Implement your logic to calculate and return game results
-//   // For example, you might loop through roomData to extract scores
-//   const results = roomData.map((user) => ({
-//     userName: user.userName,
-//     score: user.score,
-//   }));
-//   return results;
-// }
-
 
 
   socket.on("sendQuestion", (room) => {

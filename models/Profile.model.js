@@ -15,12 +15,10 @@ const profileSchema = new Schema(
       type: Number,
       required: [true, "Age is required."],
     },
-    // Add more fields as needed for your application
-
-    // Reference to a user (assuming a one-to-one relationship)
+ 
     user: {
       type: Schema.Types.ObjectId,
-      ref: 'User',  // Reference to the User model
+      ref: 'User', 
       required: true,
     },
   },

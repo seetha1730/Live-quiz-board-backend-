@@ -31,7 +31,7 @@ router.get("/allQuestionAnswer", async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
-router.put("/:id/update", async (req, res) => {
+router.post("/:id/update", async (req, res) => {
     const { category, questionText, options, correctOption } = req.body;
   
     try {
