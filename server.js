@@ -47,6 +47,12 @@ io.on("connection", (socket) => {
 
   });
 
+  // socket.on('getUsers',(room) => {
+  //  const roomData = game.find((r) => r.room === room)
+  //  if(roomData){
+  //     socket.to(room).emit('userList',{ users: roomData.users})
+  //  }
+  // })
 
   socket.on("sendQuestion", (room) => {
     socket.to(room.roomName).emit("question", room.question);

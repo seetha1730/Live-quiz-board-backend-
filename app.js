@@ -18,7 +18,9 @@ const indexRoutes = require("./routes/index.routes");
 app.use("/", indexRoutes);
 
 const authRoutes = require("./routes/auth.routes");
+const forgotEmail = require("./routes/email.routes");
 app.use("/auth", authRoutes);
+app.use("/auth", forgotEmail);
 
 const questionAnswerRoutes=  require("./routes/questionAnswer.routes");
 app.use("/question-answers", questionAnswerRoutes);

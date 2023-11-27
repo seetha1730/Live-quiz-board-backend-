@@ -9,13 +9,39 @@ const jwt = require("jsonwebtoken");
 
 // Require the User model in order to interact with the database
 const User = require("../models/User.model");
-
+const uuid = require('uuid');
 // Require necessary (isAuthenticated) middleware in order to control access to specific routes
 const { isAuthenticated } = require("../middleware/jwt.middleware.js");
 
 // How many rounds should bcrypt run the salt (default - 10 rounds)
 const saltRounds = 10;
+const globalUsersArray = []; 
 
+const mailjet = require("node-mailjet").apiConnect(
+  process.env.MAILJET_API_KEY,
+  process.env.MAILJET_API_SECRET
+);
+
+sendGeneralMail = function (mail,sub, msg) {
+  return mailjet.post("send", { version: "v3.1" }).request({
+    Messages: [
+      {
+        From: {
+          Name: process.env.NAME,
+          Email: process.env.EMAIL,
+        },
+        To: [
+          {
+            Email: mail,
+            Name: "name",
+          },
+        ],
+        Subject: sub,
+        TextPart: msg,
+      },
+    ],
+  });
+};
 // POST /auth/signup  - Creates a new user in the database
 router.post("/signup", (req, res, next) => {
   const { email, password, name } = req.body;
@@ -107,7 +133,7 @@ router.post("/login", (req, res, next) => {
     .catch((err) => next(err)); // In this case, we send error handling to the error handling middleware.
 });
 
-// GET  /auth/verify  -  Used to verify JWT stored on the client
+//GET  /auth/verify  -  Used to verify JWT stored on the client
 router.get("/verify", isAuthenticated, (req, res, next) => {
   // If JWT token is valid the payload gets decoded by the
   // isAuthenticated middleware and is made available on `req.payload`
@@ -116,5 +142,28 @@ router.get("/verify", isAuthenticated, (req, res, next) => {
   // Send back the token payload object containing the user data
   res.status(200).json(req.payload);
 });
+
+// // GET  /auth/verify  -  Used to verify JWT stored on the client
+// router.get('/verify', (req, res) => {
+//   const token = req.headers.authorization; // Assuming the token is sent in the Authorization header
+
+//   if (!token) {
+//     return res.status(401).json({ error: 'Token not provided' });
+//   }
+
+//   try {
+//     // Verify and decode the token
+//     const decoded = jwt.verify(token, 'your-secret-key'); // Replace 'your-secret-key' with your actual secret
+
+//     // Handle the decoded token as needed
+
+//     res.status(200).json({ success: true, decoded });
+//   } catch (error) {
+//     // Handle JWT verification errors
+//     console.error(error);
+//     res.status(401).json({ error: 'Invalid token' });
+//   }
+// });
+
 
 module.exports = router;
