@@ -24,6 +24,8 @@ app.use("/auth", forgotEmail);
 
 const questionAnswerRoutes=  require("./routes/questionAnswer.routes");
 app.use("/question-answers", questionAnswerRoutes);
+const profileRoutes=  require("./routes/profile.routes");
+app.use("/profile", profileRoutes);
 
 
 
