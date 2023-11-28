@@ -44,11 +44,19 @@ sendGeneralMail = function (mail,sub, msg) {
 };
 // POST /auth/signup  - Creates a new user in the database
 router.post("/signup", (req, res, next) => {
-  const { email, password, name } = req.body;
- console.log(req.body)
-  // Check if email or password or name are provided as empty strings
-  if (email === "" || password === "" || name === "") {
-    res.status(400).json({ message: "Provide email, password and name" });
+  const { email, password, name, lastName, dateOfBirth, gender, phoneNumber } = req.body;
+
+
+   // Check if required fields are provided as empty strings
+   if (
+    email === "" ||
+    password === "" ||
+    name === "" ||
+    dateOfBirth === "" ||
+    gender === "" ||
+    phoneNumber === ""
+  ) {
+    res.status(400).json({ message: "Provide all required information." });
     return;
   }
 
@@ -79,7 +87,16 @@ router.post("/signup", (req, res, next) => {
     const salt = bcrypt.genSaltSync(saltRounds);
     const hashedPassword = bcrypt.hashSync(password, salt);
   
-    return User.create({ email, password: hashedPassword, name });
+    return User.create({
+      email,
+      password: hashedPassword,
+      name,
+      lastName,
+      dateOfBirth,
+      gender,
+      phoneNumber,
+    
+    });
   })
   .then((createdUser) => {
     const { email, name, _id } = createdUser;
@@ -113,10 +130,10 @@ router.post("/login", (req, res, next) => {
 
       if (passwordCorrect) {
         // Deconstruct the user object to omit the password
-        const { _id, email, name } = foundUser;
+        const { _id, email, name ,image} = foundUser;
 
         // Create an object that will be set as the token payload
-        const payload = { _id, email, name };
+        const payload = { _id, email, name,image };
 
         // Create a JSON Web Token and sign it
         const authToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
@@ -137,33 +154,10 @@ router.post("/login", (req, res, next) => {
 router.get("/verify", isAuthenticated, (req, res, next) => {
   // If JWT token is valid the payload gets decoded by the
   // isAuthenticated middleware and is made available on `req.payload`
-  console.log(`req.payload`, req.payload);
+
 
   // Send back the token payload object containing the user data
   res.status(200).json(req.payload);
 });
-
-// // GET  /auth/verify  -  Used to verify JWT stored on the client
-// router.get('/verify', (req, res) => {
-//   const token = req.headers.authorization; // Assuming the token is sent in the Authorization header
-
-//   if (!token) {
-//     return res.status(401).json({ error: 'Token not provided' });
-//   }
-
-//   try {
-//     // Verify and decode the token
-//     const decoded = jwt.verify(token, 'your-secret-key'); // Replace 'your-secret-key' with your actual secret
-
-//     // Handle the decoded token as needed
-
-//     res.status(200).json({ success: true, decoded });
-//   } catch (error) {
-//     // Handle JWT verification errors
-//     console.error(error);
-//     res.status(401).json({ error: 'Invalid token' });
-//   }
-// });
-
 
 module.exports = router;

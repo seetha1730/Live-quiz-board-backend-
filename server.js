@@ -1,6 +1,8 @@
 const app = require("./app");
 const cors = require("cors");
 const http = require("http").createServer(app);
+const Score =  require("./models/Score.model");
+const axios = require("axios")
 const io = require("socket.io")(http, {
   cors: {
     origin: "http://localhost:5173",
@@ -19,7 +21,8 @@ io.on("connection", (socket) => {
     // Add the room to the game array
     game.push({
       room: room.roomName,
-      users: [{ id: socket.id, userName: room.userName }],
+
+      users: [{ id: socket.id, email: room.email, userName: room.userName }],
     });
 
     console.log("game", JSON.stringify(game));
@@ -29,18 +32,45 @@ io.on("connection", (socket) => {
 
     socket.join(room.roomName);
     const gameUsers = game.find((r) => r.room === room.roomName).users;
-    gameUsers.push({ id: socket.id, userName: room.name, score: 0 });
+    gameUsers.push({ id: socket.id,email: room.email, userName: room.name, score: 0 });
 
     io.to(room.roomName).emit("userJoined", gameUsers);
   });
 
 
-  socket.on("endGame", (room) => {
+  socket.on("endGame",async (room) => {
     const roomUsers = game.find((r) => r.room === room.roomName).users;
-    
+    console.log(roomUsers)
+    const scoreData = new Score({
+      players: roomUsers.map(user => {
+        if(user.score){
+          return {
+            playerName: user.userName,
+            email: user.email,
+            score: user.score,
+            rank: user.rank,
+
+          }
+        }
+      }),
+      date: new Date(),
+      roomName: room.roomName,
+      creator: roomUsers[0].userName,
+    });
+
+    await scoreData.save();
+
+   
+    try {
+      const response = await axios.post('/game/endgame', { scoreData });
+      console.log('Server response:', response.data);
+    } catch (error) {
+      console.error('Error sending user data to the server:', error.message);
+    }
+
       io.to(room.roomName).emit("result", roomUsers);
-//  const roomData = game.find((r) => r.room === room.roomData);
-  const roomIndex = game.findIndex((r) => r.room === room.roomName);
+
+     const roomIndex = game.findIndex((r) => r.room === room.roomName);
         if (roomIndex !== -1) {
           game.splice(roomIndex, 1);
         }

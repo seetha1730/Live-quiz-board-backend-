@@ -16,8 +16,29 @@ const userSchema = new Schema(
     },
     name: {
       type: String,
-      required: [true, "Name is required."],
+      required: [true, "First Name is required."],
     },
+    lastName: {
+      type: String,
+    },
+    dateOfBirth: {
+      type: Date,
+      required: [true, "Date of Birth is required."],
+    },
+    phoneNumber: {
+      type: String,
+    },
+
+    gender: {
+      type: String,
+      enum: ["male", "female", "other"],
+      required: [true, "Gender is required."],
+    },
+    image:{
+      type:String,
+
+    }
+    
   },
   {
     // this second object adds extra properties: `createdAt` and `updatedAt`

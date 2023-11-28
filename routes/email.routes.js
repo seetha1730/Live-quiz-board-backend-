@@ -89,7 +89,6 @@ router.post("/reset-password", async (req, res, next) => {
       const newPassword = req.body.password;
         const email = req.body.email;
 
-        console.log('User body:', req.body);
 
 
       if (!newPassword || !email) {

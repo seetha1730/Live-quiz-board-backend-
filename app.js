@@ -27,6 +27,9 @@ app.use("/question-answers", questionAnswerRoutes);
 const profileRoutes=  require("./routes/profile.routes");
 app.use("/profile", profileRoutes);
 
+const scoreRoutes=  require("./routes/score.routes");
+app.use("/game", scoreRoutes);
+
 
 
 
