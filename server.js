@@ -144,7 +144,7 @@ io.on("connection", (socket) => {
   });
 });
 
-const PORT = process.env.PORT || 3000;
-http.listen(PORT, function () {
-  console.log(`Server listening on http://localhost:${PORT}`);
-});
+// const PORT = process.env.PORT || 3000;
+// http.listen(PORT, function () {
+//   console.log(`Server listening on http://localhost:${PORT}`);
+// });
