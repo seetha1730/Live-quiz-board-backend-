@@ -5,7 +5,7 @@ const Score = require("./models/Score.model");
 const axios = require("axios");
 const io = require("socket.io")(http, {
   cors: {
-    origin: "*",
+    origin: "https://candid-mousse-99e5c1.netlify.app",
     methods: ["GET", "POST"],
   },
 });
