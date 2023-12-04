@@ -61,12 +61,12 @@ io.on("connection", (socket) => {
     await scoreData.save();
 
    
-    // try {
-    //   const response = await axios.post('/game/endgame', { scoreData });
-    //   console.log('Server response:', response.data);
-    // } catch (error) {
-    //   console.error('Error sending user data to the server:', error.message);
-    // }
+    try {
+      const response = await axios.post('/game/endgame', { scoreData });
+      console.log('Server response:', response.data);
+    } catch (error) {
+      console.error('Error sending user data to the server:', error.message);
+    }
     callback(roomUsers);
       io.to(room.roomName).emit("result", roomUsers);
 
