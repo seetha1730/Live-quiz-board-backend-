@@ -29,18 +29,18 @@ io.on("connection", (socket) => {
   });
 
   socket.on("join-room", (room) => {
-
+  
     socket.join(room.roomName);
     const gameUsers = game.find((r) => r.room === room.roomName).users;
     gameUsers.push({ id: socket.id,email: room.email, userName: room.name, score: 0 });
 
+    // socket.to(room.roomName).emit("userJoined", gameUsers);
     io.to(room.roomName).emit("userJoined", gameUsers);
   });
 
 
-  socket.on("endGame",async (room) => {
+  socket.on("endGame",async (room, callback) => {
     const roomUsers = game.find((r) => r.room === room.roomName).users;
-    console.log(roomUsers)
     const scoreData = new Score({
       players: roomUsers.map(user => {
         if(user.score){
@@ -61,13 +61,13 @@ io.on("connection", (socket) => {
     await scoreData.save();
 
    
-    try {
-      const response = await axios.post('/game/endgame', { scoreData });
-      console.log('Server response:', response.data);
-    } catch (error) {
-      console.error('Error sending user data to the server:', error.message);
-    }
-
+    // try {
+    //   const response = await axios.post('/game/endgame', { scoreData });
+    //   console.log('Server response:', response.data);
+    // } catch (error) {
+    //   console.error('Error sending user data to the server:', error.message);
+    // }
+    callback(roomUsers);
       io.to(room.roomName).emit("result", roomUsers);
 
      const roomIndex = game.findIndex((r) => r.room === room.roomName);
@@ -77,17 +77,19 @@ io.on("connection", (socket) => {
 
   });
 
-  // socket.on('getUsers',(room) => {
-  //  const roomData = game.find((r) => r.room === room)
-  //  if(roomData){
-  //     socket.to(room).emit('userList',{ users: roomData.users})
-  //  }
-  // })
+  socket.on('getUsers',(room, callback) => {
+   const roomData = game.find((r) => r.room === room.room)
+   if(roomData){
+    console.log('rromdata',roomData)
+    callback(roomData.users)
+   }
+  })
 
   socket.on("sendQuestion", (room) => {
-    socket.to(room.roomName).emit("question", room.question);
+    io.to(room.roomName).emit("question", room.question);
   });
   socket.on("submitAnswer", (data) => {
+    console.log(data)
     const gameUsers = game.find((r) => r.room === data.playerDetail.room).users;
       
     gameUsers.find((user) => user.userName === data.playerDetail.userName).score++;
