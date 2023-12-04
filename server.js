@@ -5,7 +5,7 @@ const Score = require("./models/Score.model");
 const axios = require("axios");
 const io = require("socket.io")(http, {
   cors: {
-    origin: "https://live-backend-259f2dd4dcb2.herokuapp.com",
+    origin: "*",
     methods: ["GET", "POST"],
   },
 });
