@@ -28,7 +28,7 @@ router.get("/forgot-password", (req, res, next) => {
 });
 
 sendResetPasswordEmail = async (email, resetToken) => {
-  const resetLink = `http://localhost:5173/reset-password?token=${resetToken}&email=${email}`;
+  const resetLink = `${process.env.CLIENT_URL}/reset-password?token=${resetToken}&email=${email}`;
 
   try {
     await mailjet.post('send', { version: 'v3.1' }).request({
