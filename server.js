@@ -5,7 +5,7 @@ const Score = require("./models/Score.model");
 const axios = require("axios");
 const io = require("socket.io")(http, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: process.env.ORIGIN,
     methods: ["GET", "POST"],
   },
 });
