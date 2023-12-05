@@ -53,8 +53,7 @@ router.post("/signup", (req, res, next) => {
     password === "" ||
     name === "" ||
     dateOfBirth === "" ||
-    gender === "" ||
-    phoneNumber === ""
+    gender === "" 
   ) {
     res.status(400).json({ message: "Provide all required information." });
     return;
@@ -144,7 +143,7 @@ router.post("/login", (req, res, next) => {
         // Send the token as the response
         res.status(200).json({ authToken: authToken });
       } else {
-        res.status(401).json({ message: "Unable to authenticate the user" });
+        res.status(401).json({ message: "Password inCorrrect" });
       }
     })
     .catch((err) => next(err)); // In this case, we send error handling to the error handling middleware.
