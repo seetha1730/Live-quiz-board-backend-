@@ -1,12 +1,12 @@
 const app = require("./app");
-const cors = require("cors");
 const http = require("http").createServer(app);
 const Score = require("./models/Score.model");
 const axios = require("axios");
 const io = require("socket.io")(http, {
   cors: {
-    origin: process.env.ORIGIN,
+    origin: "https://candid-mousse-99e5c1.netlify.app",
     methods: ["GET", "POST"],
+    
   },
 });
 
@@ -144,7 +144,7 @@ io.on("connection", (socket) => {
   });
 });
 
-const PORT =  3000;
+const PORT = process.env.PORT || 3000;
 http.listen(PORT, function () {
   console.log(`Server listening on http://localhost:${PORT}`);
 });
