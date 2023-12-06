@@ -69,7 +69,7 @@ io.on("connection", (socket) => {
         }),
         date: new Date(),
         roomName: room.roomName,
-        creator: users[0].userName,
+        creator: users[0]?.userName,
       });
       await scoreData.save();
 
