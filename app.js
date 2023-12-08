@@ -30,6 +30,9 @@ app.use("/profile", profileRoutes);
 const scoreRoutes=  require("./routes/score.routes");
 app.use("/game", scoreRoutes);
 
+const feedbackRoutes=  require("./routes/feedback.routes");
+app.use("/feedback", feedbackRoutes);
+
 
 
 

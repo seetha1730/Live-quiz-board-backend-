@@ -94,12 +94,13 @@ router.post("/signup", (req, res, next) => {
       dateOfBirth,
       gender,
       phoneNumber,
+      image,
     
     });
   })
   .then((createdUser) => {
     const { email, name, _id } = createdUser;
-    const user = { email, name, _id };
+    const user = { email, name, _id,image };
     res.status(201).json({ user });
   })
   .catch((err) => next(err));
@@ -108,6 +109,7 @@ router.post("/signup", (req, res, next) => {
 // POST  /auth/login - Verifies email and password and returns a JWT
 router.post("/login", (req, res, next) => {
   const { email, password } = req.body;
+
 
   // Check if email or password are provided as empty string
   if (email === "" || password === "") {
@@ -129,10 +131,10 @@ router.post("/login", (req, res, next) => {
 
       if (passwordCorrect) {
         // Deconstruct the user object to omit the password
-        const { _id, email, name ,image} = foundUser;
+        const { _id, email, name } = foundUser;
 
         // Create an object that will be set as the token payload
-        const payload = { _id, email, name,image };
+        const payload = { _id, email, name };
 
         // Create a JSON Web Token and sign it
         const authToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
