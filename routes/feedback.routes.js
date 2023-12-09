@@ -5,8 +5,6 @@ const Feedback = require("../models/Feedback.model");
 router.post('/user', async (req, res) => {
     try {
       const { game, player, feedbackText, rating } = req.body;
-       console.log("feedback",req.body)
-
       const newFeedback = new Feedback({
         game,
         player,

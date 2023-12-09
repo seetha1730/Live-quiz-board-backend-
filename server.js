@@ -25,7 +25,7 @@ const roomUsers = (name) => {
 };
 
 io.on("connection", (socket) => {
-  console.log("user connected");
+
 
   socket.on("create-room", (room) => {
     socket.join(room.roomName);
@@ -121,7 +121,6 @@ io.on("connection", (socket) => {
         // Broadcast the updated scores to all users in the room
         io.to(room.roomName).emit("updateScores", roomData.users);
 
-        console.log("leave", room);
       }
     } else {
       console.error("Room not found:", room.roomName);
@@ -129,7 +128,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    console.log("user disconnected");
+
 
     // Remove the user from all rooms in the game array
     game.forEach((roomData) => {
